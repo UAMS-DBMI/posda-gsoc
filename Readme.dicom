@@ -1,0 +1,93 @@
+The DICOM standard
+
+DICOM is a standard for medical imaging.  It is available for free download
+at the following URL:
+http://dicom.nema.org/standard.html
+
+You might want to download  pdfs of Parts 3 and 6 of the Standard before reading
+the rest of this readme.  It uses examples from the currently available
+standard online.
+
+DICOM is a very complex standard (it currently has 18 parts, 1-20, with 
+Parts 9 and 13 no longer published).  It covers a number of different topics,
+from communications protocols, to workflow management.  However, the most
+important part of DICOM are contained in Part3 (Information Object Definitions)
+and Part 6 (Data Dictionary).  Part 6 defines a large number of data elements,
+each of which has the following attributes: a tag (which consists of a group
+number and element number), a Value Representation, a Value Multiplicity,
+a Name, and a Keyword.  These are all defined in table 6-1 of Part 6 of the
+DICOM standard.  This table is quite large.  It starts on page 23 and extends
+to page 162.
+
+Originally, the groups were intended to arrange elements into functional
+groups, but as the standardization effort proceeded, it became apparent that
+this was not adequate.  For example, CT images are very different from MR
+images, which are both very different from PET images.  It was decided that 
+each particular type of image which have its relevant tags defined in terms
+of an "Information Object Definition".  These are defined in Part 3 of the
+standard.
+
+For example, the definition of the "CT Image Information Object" is 
+contained in Table A.3.1. of Part 3 of the DICOM Standard.  All of the
+DICOM Composite Information Objects have similar tables as their definitions.
+The table has the following columns: IE (Information Entity, which is a loose
+collection of related Modules), Module (a collection of related elements),
+Reference (the section in which the Module is defined), and Usage (M means
+Mandatory, U means up to user, and C means Conditional).  Many modules 
+(e.g. Patient Module) are shared among many different Information Object
+Definitions.  Some (e.g. CT Image) are specific to a particular Information
+Object Definition.
+
+Module defintions all have the same structure.  For example, Table C.7-1
+defines the Patient Module.  It is a table with the following columns: 
+Attribute Name (which should match the Name of the corresponding entry in
+table 6.1 of Part 6), Tag (which is the index into table 6.1 of Part 6),
+Type (1 means required, 2 means required but can be empty, and 3 means
+optional. A C can be appended, and if so means conditional), and
+Attribute Description (what the element means in the context of this
+Information Object).  There are two other things to understand about module
+tables:  macro invocations and element indentation.
+
+Element Indentation (and Sequences)
+if the Attribute Name begins with a ">", it means that the following line
+is contained within the previous element, which must be a "sequence element".
+This means that the defintion of the element (in Part 6) must have a VR of
+"SQ".  The ">" characters will continue until the end of sequence content.
+
+Macro Invocations
+Some rows in the table only have two columns, and the first column (after
+possible ">" characters) begins with the word "Include".  This indicates a
+macro invocation. A reference to the table follows the word "Include".
+The second column may contain values to be set during the expansion of the
+macro.  The format of a macro is identical to that of a module table (and 
+macros may contain other macros).  Think of a macro substitution as a simple
+include (but it also takes the number of ">" characters before the include
+and adds them before the attribute name in the macro table (which may itself
+have some ">" characters in some rows).  Watch out.  There are somes macros 
+which are recursive.
+
+The upshot of all this is that it is very difficult for anyone who is not an
+expert in DICOM to get an idea of exactly what tags a CT Image contains.
+This makes it difficult for CT manufacturers to conform to the standard, and
+makes it difficult to validate whether DICOM files are in fact comformant
+to the standard.
+
+However, the official version of the DICOM standard is released in a 
+"DocBook" format (www.docbook.org).  DocBook is an XML schema which is
+"particularly well suited to books and papers about computer hardware and
+software".  Being XML, it is easy to parse, and can be parsed into a tree
+like data structure, the structure of which reflects the structre of the
+document itself.  (i.e books contain chapters which contain sections which
+contain paragraphs, tables, figures, etc. Entities can be labeled).
+
+It should therefore be possible to construct a "holistic" Information Object 
+Definition for any Information Object, by starting at the Object Definition 
+table in annex A of Part 3, and expanding all of the module and macro tables.
+
+This project explores the technical feasiblity of this approach.  Programs
+which parse the docbook version of DICOM have been written (described in the
+Readme.analysis file), and produce files which describe each DICOM IOD
+described in the DICOM standard (strictly speaking only "Composite IOD's are
+so analyzed).  A prototype html rendering program has been written, but to
+make it widely available, it needs to be translated into a javascript
+form, which can run in a browser.

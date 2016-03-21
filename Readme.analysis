@@ -1,0 +1,41 @@
+Programs for Analysis of the DocBook Version of DICOM
+The analysis of the DICOM IOD tables is done in steps:
+1) Parse each of the Documents into serialized perl datastructures.
+   This is done by the program "BuildParsedDicom.pl", which further
+   invokes the program "ParseIntoPerlStruct.pl".
+2) The Program "GetIodModuleTableIds.pl" will get a list of all of 
+   the Ids of all of the top level tables which define a DICOM 
+   Composite IOD.  (The parameter to be passed to this program is the
+   path to the Parsed Vesion of Part3 of the DICOM standard).
+4) For each element, the program "ExpandIodModules.pl" is invoked to
+   read the module table, and expand each module.  It first reads the 
+   table by invoking the program "GetIodModuleTable.pl".  Then, it 
+   expands modules by invoking the program "ExpandModuleTable.pl".
+   ExpandModuleTable.pl will invoke itself recursively to expand macros.
+
+All of these programs store data in serialized perl datastructures, using
+the perl "Storable" module.
+
+At the end of the day (or in the morning after these programs have run 
+overnight) the program "PerlStructToJson.pl" can be used to convert the 
+output to JSON format.
+
+All of the programs referenced are found in the directory:
+DicomXml/bin
+
+except PerlStructToJson.pl, which can be found in
+Posda/bin
+
+Interpretation of the tables is somewhat ad hoc, and a few of the tables
+cannot be interpreted at this time.  There are explict checks for these
+tables embedded in both the program "ExpandIodModule.pl" and 
+"ExpandModuleTable.pl".
+
+Since the "parsing" of the already parsed xml files relies on conventions
+within the DICOM standard, and there is nothing to enforce these conditions,
+some tables can't be parsed.  There are section in both "ExpandModuleTable.pl"
+and "ExpandIodModules.pl" about these tables.  
+
+It is expected that as the DICOM standard is updated, these parsing modules
+may need to be updated to reflect evolving conventions in structuring of
+tables.
