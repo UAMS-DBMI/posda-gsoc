@@ -1,14 +1,14 @@
 //  $Source: /Users/bbennett/pass/archive/PosdaAppMacConfig/AppConfig/Environment.json,v $
 //  $Date: 2014/09/22 18:37:47 $
 //  $Revision: 1.2 $
-// 
+//
 {
   "ApplicationInitClass" : "AppController::JavaScriptApp",
   "ApplicationInitMethod" : "InitApp",
   "ApplicationLoginMethod" : "NullLogin",
   "ApplicationName" : "Testing Application Server",
-  "AppHttpRoot" : "/Users/bbennett/posda-gsoc/HttpRoot/http_root",
+  "AppHttpRoot" : "HttpRoot/http_root",
   "AuthenticationDbType" : "File",
   "AuthenticationDbFileName" : "/Volumes/5TEncrypted/cache/Login.db",
-  "JavascriptRoot" : "/Users/bbennett/posda-gsoc/Posda/javascript",
+  "JavascriptRoot" : "Posda/javascript",
 }
